@@ -22,7 +22,7 @@ public class NoteController {
 
     private final NoteService noteService;
 
-    @PostMapping
+    @PostMapping("/create")
     public ResponseEntity<NoteResponseDto> createNote(@Valid @RequestBody NoteRequestDto request) {
         Note note = Note.builder()
                 .title(request.getTitle())

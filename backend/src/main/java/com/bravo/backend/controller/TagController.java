@@ -24,7 +24,7 @@ public class TagController {
     private final TagService tagService;
     private final NoteService noteService;
 
-    @PostMapping
+    @PostMapping("/create")
     public ResponseEntity<TagResponseDto> createTag(@Valid @RequestBody TagRequestDto request) {
         try {
             Tag tag = tagService.createTag(request.getName());
@@ -70,7 +70,6 @@ public class TagController {
         }
     }
 
-    // Get all notes with a specific tag
     @GetMapping("/{id}/notes")
     public ResponseEntity<List<NoteResponseDto>> getNotesByTag(@PathVariable Long id) {
         try {
@@ -85,11 +84,9 @@ public class TagController {
     }
 
     private TagResponseDto toResponseDto(Tag tag) {
-        // Aquí podrías calcular el noteCount si tienes el método en el repository
         return TagResponseDto.builder()
                 .id(tag.getId())
                 .name(tag.getName())
-                .noteCount(0) // Implementar si necesitas el conteo
                 .build();
     }
 

@@ -12,5 +12,5 @@ import lombok.NoArgsConstructor;
 public class TagResponseDto {
     private Long id;
     private String name;
-    private long noteCount; // Cantidad de notas que usan esta etiqueta
+    private long noteCount;
 }
