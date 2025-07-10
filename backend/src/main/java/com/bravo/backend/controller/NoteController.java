@@ -126,8 +126,6 @@ public class NoteController {
         }
     }
 
-    // ===== GESTIÓN DE ETIQUETAS =====
-
     @PostMapping("/{id}/tags")
     public ResponseEntity<NoteResponseDto> addTagToNote(@PathVariable Long id, @RequestParam String tagName) {
         try {
