@@ -1,40 +1,52 @@
 import React, { useEffect, useState } from 'react';
-import { getAllNotes } from '../api/noteService';
+import {
+  getAllNotes,
+  getActiveNotes,
+  getArchivedNotes,
+  getNotesByTag
+} from '../api/noteService';
+import NoteCard from './NoteCard';
+import NoteFilter from './NoteFilter';
 
 function NoteList() {
   const [notes, setNotes] = useState([]);
 
-  useEffect(() => {
-    getAllNotes()
+  const loadNotes = ({ tag = '', status = 'all' } = {}) => {
+    let fetchFunction;
+
+    if (tag) {
+      fetchFunction = () => getNotesByTag(tag);
+    } else {
+      switch (status) {
+        case 'active':
+          fetchFunction = getActiveNotes;
+          break;
+        case 'archived':
+          fetchFunction = getArchivedNotes;
+          break;
+        default:
+          fetchFunction = getAllNotes;
+      }
+    }
+
+    fetchFunction()
       .then(res => setNotes(res.data))
       .catch(err => console.error(err));
+  };
+
+  useEffect(() => {
+    loadNotes();
   }, []);
 
   return (
-    <div className="container mt-5">
-      <h2>Notas</h2>
-      <div className="list-group">
-        {notes.map(note => (
-          <div key={note.id} className="list-group-item">
-            <h5>{note.title}</h5>
-            <p>{note.content}</p>
-            {note.tags && note.tags.length > 0 && (
-              <div>
-                <strong>Tags:</strong>{' '}
-                {note.tags.map(tag => (
-                  <span key={tag} className="badge bg-secondary me-1">{tag}</span>
-                ))}
-              </div>
-            )}
-            <p className="text-muted">
-              {note.archived ? 'Archivada' : 'Activa'}
-            </p>
-          </div>
-        ))}
-      </div>
+    <div className="container mt-4">
+      <NoteFilter onFilterChange={loadNotes} />
+      {notes.length === 0 && <p>There are no notes to show.</p>}
+      {notes.map(note => (
+        <NoteCard key={note.id} note={note} onAction={() => loadNotes()} />
+      ))}
     </div>
   );
 }
 
 export default NoteList;
-
