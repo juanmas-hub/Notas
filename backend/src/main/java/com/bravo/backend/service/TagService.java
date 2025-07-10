@@ -54,9 +54,4 @@ public class TagService {
         }
         tagRepository.deleteById(id);
     }
-
-    public List<Tag> getUnusedTags() {
-        return tagRepository.findTagsNotUsedByAnyNote();
-    }
-
 }

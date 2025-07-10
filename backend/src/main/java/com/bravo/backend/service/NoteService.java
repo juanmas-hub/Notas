@@ -5,12 +5,16 @@ import com.bravo.backend.models.Tag;
 import com.bravo.backend.repository.NoteRepository;
 import com.bravo.backend.repository.TagRepository;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
+@Slf4j
 @Service
 @AllArgsConstructor // constructor-based dependency injection
 public class NoteService {
@@ -22,6 +26,7 @@ public class NoteService {
         note.setUpdatedAt(LocalDateTime.now());
         return noteRepository.save(note);
     }
+
 
     public Optional<Note> getNoteById(Long id) {
         return noteRepository.findById(id);
@@ -54,15 +59,6 @@ public class NoteService {
         noteRepository.deleteById(id);
     }
 
-    public void deleteNoteByTitle(String title) {
-        Optional<Note> note = noteRepository.findByTitle(title);
-        if (note.isPresent()) {
-            noteRepository.delete(note.get());
-        } else {
-            throw new RuntimeException("Note not found with title: " + title);
-        }
-    }
-
     public Note archiveNote(Long id) {
         Note note = noteRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Note not found with id: " + id));
@@ -89,18 +85,6 @@ public class NoteService {
         return noteRepository.findArchivedNotesOrderByTitleIgnoreCase();
     }
 
-    public Note addTagToNote(Long noteId, Long tagId) {
-        Note note = noteRepository.findById(noteId)
-                .orElseThrow(() -> new RuntimeException("Note not found with id: " + noteId));
-
-        Tag tag = tagRepository.findById(tagId)
-                .orElseThrow(() -> new RuntimeException("Tag not found with id: " + tagId));
-
-        note.getTags().add(tag);
-        note.setUpdatedAt(LocalDateTime.now());
-        return noteRepository.save(note);
-    }
-
     public Note addTagToNoteByName(Long noteId, String tagName) {
         Note note = noteRepository.findById(noteId)
                 .orElseThrow(() -> new RuntimeException("Note not found with id: " + noteId));
@@ -108,22 +92,15 @@ public class NoteService {
         Tag tag = tagRepository.findByName(tagName)
                 .orElseGet(() -> tagRepository.save(Tag.builder().name(tagName).build()));
 
-        note.getTags().add(tag);
+        // To avoid ConcurrentModificationException
+        Set<Tag> tags = note.getTags() == null ? new HashSet<>() : new HashSet<>(note.getTags());
+        tags.add(tag);
+        note.setTags(tags);
+
         note.setUpdatedAt(LocalDateTime.now());
         return noteRepository.save(note);
     }
 
-    public Note removeTagFromNote(Long noteId, Long tagId) {
-        Note note = noteRepository.findById(noteId)
-                .orElseThrow(() -> new RuntimeException("Note not found with id: " + noteId));
-
-        Tag tag = tagRepository.findById(tagId)
-                .orElseThrow(() -> new RuntimeException("Tag not found with id: " + tagId));
-
-        note.getTags().remove(tag);
-        note.setUpdatedAt(LocalDateTime.now());
-        return noteRepository.save(note);
-    }
 
     public Note removeTagFromNoteByName(Long noteId, String tagName) {
         Note note = noteRepository.findById(noteId)
@@ -141,32 +118,14 @@ public class NoteService {
         Tag tag = tagRepository.findById(tagId)
                 .orElseThrow(() -> new RuntimeException("Tag not found with id: " + tagId));
 
-        return noteRepository.findByTagsContaining(tag);
+        return noteRepository.findByTags_Name(tag.getName());
     }
 
     public List<Note> getNotesByTagName(String tagName) {
         Tag tag = tagRepository.findByName(tagName)
                 .orElseThrow(() -> new RuntimeException("Tag not found with name: " + tagName));
 
-        return noteRepository.findByTagsContaining(tag);
-    }
-
-    public List<Note> getActiveNotesByTag(Long tagId) {
-        Tag tag = tagRepository.findById(tagId)
-                .orElseThrow(() -> new RuntimeException("Tag not found with id: " + tagId));
-
-        return noteRepository.findByTagsContainingAndArchivedFalse(tag);
-    }
-
-    public List<Note> getArchivedNotesByTag(Long tagId) {
-        Tag tag = tagRepository.findById(tagId)
-                .orElseThrow(() -> new RuntimeException("Tag not found with id: " + tagId));
-
-        return noteRepository.findByTagsContainingAndArchivedTrue(tag);
-    }
-
-    public List<Note> searchNotesByTitle(String title) {
-        return noteRepository.findByTitleContainingIgnoreCase(title);
+        return noteRepository.findByTags_Name(tag.getName());
     }
 
 }

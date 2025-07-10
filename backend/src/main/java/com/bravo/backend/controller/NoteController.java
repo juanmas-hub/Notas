@@ -10,9 +10,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @RestController
@@ -79,7 +77,7 @@ public class NoteController {
         }
     }
 
-    @GetMapping
+    @GetMapping("/list")
     public ResponseEntity<List<NoteResponseDto>> getAllNotes() {
         List<Note> notes = noteService.getAllNotes();
         List<NoteResponseDto> response = notes.stream()
@@ -159,9 +157,13 @@ public class NoteController {
     }
 
     private NoteResponseDto toResponseDto(Note note) {
-        Set<String> tagNames = note.getTags().stream()
-                .map(Tag::getName)
-                .collect(Collectors.toSet());
+        Set<String> tagNames = note.getTags() != null ?
+                note.getTags().stream()
+                        .filter(Objects::nonNull)
+                        .map(Tag::getName)
+                        .filter(Objects::nonNull)
+                        .collect(Collectors.toSet()) :
+                Collections.emptySet();
 
         return NoteResponseDto.builder()
                 .id(note.getId())

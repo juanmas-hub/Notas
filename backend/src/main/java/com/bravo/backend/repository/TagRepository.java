@@ -12,8 +12,6 @@ import java.util.Optional;
 public interface TagRepository extends JpaRepository<Tag, Long> {
     Optional<Tag> findByName(String name);
 
-    List<Tag> findByNameContainingIgnoreCase(String name);
-
     @Query("SELECT t FROM Tag t WHERE t NOT IN (SELECT DISTINCT tag FROM Note n JOIN n.tags tag)")
     List<Tag> findTagsNotUsedByAnyNote();
 

@@ -1,22 +1,24 @@
 package com.bravo.backend.models;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@Data // toString, getters, setter, hashcode, equals
-@Builder
-@NoArgsConstructor
+@Getter
+@Setter
+@ToString(exclude = {"notes"})
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @AllArgsConstructor
+@NoArgsConstructor
+@Builder
 public class Tag {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @EqualsAndHashCode.Include
     private Long id;
 
     private String name;
@@ -24,3 +26,4 @@ public class Tag {
     @ManyToMany(mappedBy = "tags")
     private Set<Note> notes = new HashSet<>();
 }
+
