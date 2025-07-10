@@ -13,7 +13,7 @@ Update note by id.
 DELETE /api/notes/{id}
 Delete note by id.
 
-GET /api/notes
+GET /api/notes/list
 Get all notes.
 
 GET /api/notes/active
