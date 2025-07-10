@@ -11,7 +11,7 @@ import java.util.Optional;
 @Service
 @AllArgsConstructor
 public class TagService {
-    
+
     private final TagRepository tagRepository;
 
     public Tag createTag(String tagName) {
