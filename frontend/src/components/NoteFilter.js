@@ -20,18 +20,18 @@ function NoteFilter({ onFilterChange }) {
     <div className="container mt-4 mb-4">
       <div className="row g-3 align-items-end">
         <div className="col-md-4">
-          <label className="form-label">Estado</label>
+          <label className="form-label">State</label>
           <select className="form-select" value={status} onChange={e => setStatus(e.target.value)}>
-            <option value="all">Todas</option>
-            <option value="active">Activas</option>
-            <option value="archived">Archivadas</option>
+            <option value="all">All</option>
+            <option value="active">Actives</option>
+            <option value="archived">Archived</option>
           </select>
         </div>
 
         <div className="col-md-4">
           <label className="form-label">Tag</label>
           <select className="form-select" value={tag} onChange={e => setTag(e.target.value)}>
-            <option value="">Todos</option>
+            <option value="">All</option>
             {tags.map(t => (
               <option key={t.id} value={t.name}>{t.name}</option>
             ))}
@@ -40,7 +40,7 @@ function NoteFilter({ onFilterChange }) {
 
         <div className="col-md-4">
           <button className="btn btn-primary" onClick={handleApply}>
-            Aplicar Filtro
+            Aply filter
           </button>
         </div>
       </div>

@@ -30,7 +30,7 @@ function NoteEditForm({ note, onCancel, onUpdated }) {
   return (
     <div className="card mt-3">
       <div className="card-body">
-        <h5 className="card-title">Editar Nota</h5>
+        <h5 className="card-title">Edit note</h5>
         <form onSubmit={handleSubmit}>
           <div className="mb-3">
             <input className="form-control" value={title} onChange={e => setTitle(e.target.value)} />
@@ -41,8 +41,8 @@ function NoteEditForm({ note, onCancel, onUpdated }) {
           <div className="mb-3">
             <input className="form-control" placeholder="Tags (separated by comma)" value={tagsInput} onChange={e => setTagsInput(e.target.value)} />
           </div>
-          <button className="btn btn-success me-2" type="submit">Guardar Cambios</button>
-          <button className="btn btn-secondary" type="button" onClick={onCancel}>Cancelar</button>
+          <button className="btn btn-success me-2" type="submit">Save changes</button>
+          <button className="btn btn-secondary" type="button" onClick={onCancel}>Cancel</button>
         </form>
       </div>
     </div>

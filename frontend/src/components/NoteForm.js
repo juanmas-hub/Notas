@@ -26,7 +26,7 @@ function NoteForm({ onNoteCreated }) {
 
   return (
     <div className="container mt-4">
-      <h2>Crear Nota</h2>
+      <h2>Create Note</h2>
       <form onSubmit={handleSubmit}>
         <div className="mb-3">
           <input className="form-control" placeholder="Título" value={title} onChange={e => setTitle(e.target.value)} />
