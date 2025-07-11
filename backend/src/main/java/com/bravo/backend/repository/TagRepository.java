@@ -15,4 +15,7 @@ public interface TagRepository extends JpaRepository<Tag, Long> {
     @Query("SELECT t FROM Tag t WHERE t NOT IN (SELECT DISTINCT tag FROM Note n JOIN n.tags tag)")
     List<Tag> findTagsNotUsedByAnyNote();
 
+    Optional<Tag> findByNameIgnoreCase(String name);
+
+
 }

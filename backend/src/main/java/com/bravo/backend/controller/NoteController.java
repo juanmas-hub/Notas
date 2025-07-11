@@ -57,10 +57,9 @@ public class NoteController {
             Note updatedNote = noteService.updateNote(id, noteDetails);
 
             if (request.getTagNames() != null) {
-                for (String tagName : request.getTagNames()) {
-                    updatedNote = noteService.addTagToNoteByName(updatedNote.getId(), tagName);
-                }
+                updatedNote = noteService.setTagsByNames(updatedNote.getId(), request.getTagNames());
             }
+
 
             return ResponseEntity.ok(toResponseDto(updatedNote));
         } catch (RuntimeException e) {

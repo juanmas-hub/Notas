@@ -5,7 +5,6 @@ import com.bravo.backend.models.Tag;
 import com.bravo.backend.repository.NoteRepository;
 import com.bravo.backend.repository.TagRepository;
 import lombok.AllArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -13,8 +12,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
-@Slf4j
 @Service
 @AllArgsConstructor // constructor-based dependency injection
 public class NoteService {
@@ -99,6 +98,26 @@ public class NoteService {
 
         note.setUpdatedAt(LocalDateTime.now());
         return noteRepository.save(note);
+    }
+
+    public Note setTagsByNames(Long noteId, Set<String> tagNames) {
+        Note note = getNoteById(noteId).orElseThrow(() -> new RuntimeException("Note not found"));
+
+        Set<Tag> newTags = tagNames.stream()
+                .map(this::findOrCreateTagByName)
+                .collect(Collectors.toSet());
+
+        note.setTags(newTags);
+        return noteRepository.save(note);
+    }
+
+    private Tag findOrCreateTagByName(String name) {
+        return tagRepository.findByNameIgnoreCase(name)
+                .orElseGet(() -> {
+                    Tag newTag = new Tag();
+                    newTag.setName(name);
+                    return tagRepository.save(newTag);
+                });
     }
 
 
