@@ -1,3 +1,48 @@
+# Running the Project
+
+## Requirements
+
+- **Java JDK 17+** installed and configured in your system PATH.  
+- **Maven** installed and configured in your system PATH to build and run the backend.  
+- **Node.js (v16+)** and **npm** installed and configured in your system PATH to run the frontend.  
+- **MySQL Server** installed and running locally (or accessible remotely).  
+- A MySQL user with permissions to create databases and tables, or a pre-existing database configured.
+
+## Setup and Run
+
+1. **Clone the repository:**
+
+   ```bash
+   git clone <repository-url>
+   cd <repository-folder>
+    ```
+2. **Prepare MySQL database**
+   Before running the application, make sure to have a MySQL database created for the project. You can create the database manually or let the setup script handle it.
+
+3. **Run the provided setup and run script:**
+    There is a shell script run.sh which will:
+
+    - Ask for your MySQL credentials and desired database name (default is notes_db).
+
+    - Check if the database exists; if not, it will create it.
+
+    - Start the backend server using Maven.
+
+    - Install frontend dependencies and start the frontend server.
+
+    To run the script, execute in your terminal:
+
+    ```bash
+   ./run.sh
+    ```
+
+4. **Access the application:**
+
+    - The backend will start on http://localhost:8080.
+
+    - The frontend will start on http://localhost:3000.
+  
+
 ## Endpoints
 ### Base path: /api/notes
 
@@ -57,3 +102,6 @@ Delete a tag by its ID.
 GET /api/tags/{id}/notes
 Retrieve all notes linked with a given tag ID.
 
+### Stopping the Application
+
+To stop the aplication press ctrl+c in the terminal running the script.
