@@ -1,0 +1,15 @@
+# IntelliJ IDEA
+.idea/
+
+# Maven target folder
+backend/target/
+
+# Node modules
+frontend/node_modules/
+
+# Logs
+*.log
+
+# OS files
+.DS_Store
+Thumbs.db
